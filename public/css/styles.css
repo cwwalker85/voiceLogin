@@ -1,0 +1,37 @@
+/* --- Transitions --- */
+* {
+    transition:ease all;
+}
+
+.threeHundred {
+    transition-duration:300ms;
+}
+
+.active {
+    opacity:1 !important;
+    height:auto !important;
+}
+
+/* --- Overlay --- */
+
+#overlay {
+    z-index:2;
+    position:fixed;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    background:rgba(0,0,0,0.15);
+    opacity:0;
+}
+
+#loginForm {
+    z-index:3;
+    position:fixed;
+    width:400px;
+    left:calc(50% - 200px);
+    background:#fff;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 2px 3px rgba(0,0,0,0.15);
+}

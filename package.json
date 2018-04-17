@@ -1,0 +1,29 @@
+{
+  "name": "voicelogin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cwwalker85/voiceLogin.git"
+  },
+  "author": "Chris Walker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cwwalker85/voiceLogin/issues"
+  },
+  "homepage": "https://github.com/cwwalker85/voiceLogin#readme",
+  "dependencies": {
+    "binaryjs": "^0.2.1",
+    "express": "^4.16.3",
+    "mime": "^2.3.1",
+    "mime-db": "^1.33.0",
+    "mime-types": "^2.1.18",
+    "pug": "^2.0.3",
+    "wav": "^1.0.1"
+  }
+}
