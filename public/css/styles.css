@@ -1,16 +1,106 @@
 /* --- Transitions --- */
 * {
-    transition:ease all;
+    transition-timing-function: ease;
+    transition-property: all;
 }
 
 .threeHundred {
     transition-duration:300ms;
 }
 
+.sixHundred {
+    transition-duration:600ms;
+}
+
+.nineHundred {
+    transition-duration:900ms;
+}
+
 .active {
     opacity:1 !important;
     height:auto !important;
 }
+
+/* --- Animate --- */
+
+.animate {
+    -webkit-animation: pulse 1s alternate infinite;
+    -moz-animation: pulse 1s alternate infinite;
+    -o-animation: pulse 1s alternate infinite;
+    animation: pulse 1s alternate infinite;
+}
+@-webkit-keyframes pulse {
+    0% {
+        background: rgba(0,169,224, 1);
+    }
+    100% {
+        background: rgba(0,169,224, 0.75);
+    }
+}
+@-moz-keyframes pulse {
+    0% {
+        background: rgba(0,169,224, 1);
+    }
+    100% {
+        background: rgba(0,169,224, 0.75);
+    }
+}
+@-o-keyframes pulse {
+    0% {
+        background: rgba(0,169,224, 1);
+    }
+    100% {
+        background: rgba(0,169,224, 0.75);
+    }
+}
+@keyframes pulse {
+    0% {
+        background: rgba(0,169,224, 1);
+    }
+    100% {
+        background: rgba(0,169,224, 0.75);
+    }
+}
+
+.recording {
+    -webkit-animation: record 1s alternate infinite;
+    -moz-animation: record 1s alternate infinite;
+    -o-animation: record 1s alternate infinite;
+    animation: record 1s alternate infinite;
+}
+@-webkit-keyframes record {
+    0% {
+        background: rgba(251,79,20, 1);
+    }
+    100% {
+        background: rgba(251,79,20, 0.75);
+    }
+}
+@-moz-keyframes record {
+    0% {
+        background: rgba(251,79,20, 1);
+    }
+    100% {
+        background: rgba(251,79,20, 0.75);
+    }
+}
+@-o-keyframes record {
+    0% {
+        background: rgba(251,79,20, 1);
+    }
+    100% {
+        background: rgba(251,79,20, 0.75);
+    }
+}
+@keyframes record {
+    0% {
+        background: rgba(251,79,20, 1);
+    }
+    100% {
+        background: rgba(251,79,20, 0.75);
+    }
+}
+
 
 /* --- Overlay --- */
 
@@ -21,17 +111,235 @@
     right:0;
     bottom:0;
     left:0;
-    background:rgba(0,0,0,0.15);
+    background:rgba(0,0,0,0.25);
     opacity:0;
 }
 
+/* --- Modal --- */
+
 #loginForm {
+    transition-delay:300ms;
     z-index:3;
     position:fixed;
-    width:400px;
-    left:calc(50% - 200px);
-    background:#fff;
-    padding:30px;
-    border-radius:20px;
+    width:300px;
+    left:calc(50% - 150px);
+    background:#fafafa;
+    border-radius:10px;
     box-shadow:0 2px 3px rgba(0,0,0,0.15);
+    top:100px;
+    opacity:0;
+    box-sizing: border-box;
+
+    background: rgba(250,250,250,1);
+    background: -moz-linear-gradient(-45deg, rgba(250,250,250,1) 0%, rgba(234,234,234,1) 100%);
+    background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(250,250,250,1)), color-stop(100%, rgba(234,234,234,1)));
+    background: -webkit-linear-gradient(-45deg, rgba(250,250,250,1) 0%, rgba(234,234,234,1) 100%);
+    background: -o-linear-gradient(-45deg, rgba(250,250,250,1) 0%, rgba(234,234,234,1) 100%);
+    background: -ms-linear-gradient(-45deg, rgba(250,250,250,1) 0%, rgba(234,234,234,1) 100%);
+    background: linear-gradient(135deg, rgba(250,250,250,1) 0%, rgba(234,234,234,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#eaeaea', GradientType=1 );
 }
+
+.header {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    position:relative;
+
+    margin-top:-20px;
+}
+
+    .header i {
+        font: normal normal normal 60px/43px FontAwesome;
+        margin: 0 0 0 20px;
+        background: #fafafa;
+        text-shadow: 0 2px 3px rgba(0,0,0,0.25);
+        color:#004165;
+    }
+
+    .header h2 {
+        font-size:14px;
+        line-height:1;
+        font-weight:900; 
+        flex: 0 1 100%;
+        text-align:right;
+        margin-right:20px;
+        margin-top:-5px;
+        letter-spacing:0.1px;
+        opacity:0.75;
+        color: #004165;
+    }
+
+        .header h2 span {
+            font-weight:300;
+            color:#333;
+        }
+
+.modal-body {
+    padding:0 20px;
+    margin:40px 0 0;
+}
+
+    .modal-body h1 {
+        font-size:36px;
+        font-weight:300;
+        line-height:1;
+        margin:0 0 10px;
+        color: #004165;
+    }
+
+    .modal-body p {
+        font-size:16px;
+        font-weight:300;
+        color:#666;
+    }
+
+        .modal-body p strong {
+            font-weight:500;
+            color:rgba(0,169,224, 1);
+        }
+
+.modal-form {
+    position:relative;
+}   
+
+    .modal-form::before {
+        position: absolute;
+        content: 'Field cannot be empty.';
+        color: #fb4f14;
+        pointer-events: none;
+        top: 8px;
+        left: 20px;
+        background: rgba(221,221,221,1);
+        opacity:0;
+        transition-duration:300ms;
+    }
+
+    .modal-form.error input {
+        border-bottom:solid 3px #fb4f14;
+    }
+
+    .modal-form.error::before {
+        opacity:1;
+    }
+
+    .modal-form.error:hover::before {
+        background: rgba(221,221,221,0.5);
+    }
+
+    .modal-form input {
+        transition-duration:300ms;
+        background: rgba(221,221,221,1);
+        border:none;
+        border-bottom:solid 3px #ccc;
+        color:#333;
+        border-radius:0px;
+        padding:20px;
+        width:100%;
+    }
+
+    .modal-form input:active,
+    .modal-form input:hover,
+    .modal-form input:focus {
+        background: rgba(221,221,221,0.5);
+        border:none;
+        border-bottom: solid 3px #00a9e0;
+    }
+
+    .modal-form .phrase {
+        padding: 20px 20px 15px;
+        background: #ccc;
+        border-radius: 10px;
+        margin:0 0 30px;
+        position:relative;
+    }
+
+        .modal-form .phrase h3 {
+            font-size: 24px;
+            line-height: 34px;
+            font-weight: 400;
+            margin:0;
+        }
+
+        .modal-form .phrase::after {
+            position: absolute;
+            content: '\f0d7';
+            bottom: -21px;
+            left: 20px;
+            color: #ccc;
+            font: normal normal normal 36px/1 fontawesome;
+        }
+
+
+.modal-action {
+    border-top:solid 1px #ccc;
+    display:flex;
+    flex-direction: row;
+    justify-content: stretch;
+    flex-wrap:nowrap;
+    margin-left:-20px;
+    margin-right:-20px;
+    margin-top:10px;
+}
+
+    .modal-action a {
+        text-decoration:none;
+        transition-duration:300ms;
+        padding:10px 20px;
+        text-transform:uppercase;
+    }
+
+        .modal-action a:first-of-type {
+            color:#fff !important;
+            background: rgba(0,169,224, 1) !important;
+            flex:0 1 100%  !important;
+            position:relative;
+            border-radius:0 0 0 10px;
+            font-weight:500 !important;
+        }
+
+            .modal-action a:first-of-type span {
+                position:absolute;
+                right:20px;
+                opacity:0.5;
+                font-weight:300;
+            }
+
+            .modal-action a:first-of-type:hover {
+                -webkit-animation: pulse 1s alternate infinite;
+                -moz-animation: pulse 1s alternate infinite;
+                -o-animation: pulse 1s alternate infinite;
+                animation: pulse 1s alternate infinite;
+            }
+
+        .modal-action a:last-of-type {
+            color:#666;
+            background: rgba(221,221,221,1);
+            flex:0 1 auto;
+            white-space:nowrap;
+            border-radius:0 0 10px 0;
+            font-weight:300;
+        }
+
+            .modal-action a:last-of-type:hover {
+                background: rgba(221,221,221,0.5);
+            }
+
+        .modal-action a.checkPhrase,
+        .modal-action a.stopPhrase,
+        .modal-action a.continue,
+        .modal-action a.full {
+            border-radius:0 0 5px 5px !important;
+        }
+
+        .modal-action a.continue {
+            background:rgba(162,173,0,1) !important;
+        }
+
+        .modal-action a.continue:hover {
+            background:rgba(162,173,0.8) !important;
+            animation:none;
+        }
+        
