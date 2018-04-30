@@ -9,6 +9,58 @@
 	success: function (data) {},
 });*/
 
+function buildForm(parameters){
+	let fields = JSON.parse(parameters), parameter, form = '', labelName, fieldId, fieldType;
+
+	for ( let i=0;i < fields.length;i++){
+		parameter = fields[i];
+		
+		switch(parameter) {
+			case 'emailAddress':
+				labelName = 'Email Address';
+				fieldId = 'email_address';
+				fieldType = 'text';
+				break;
+
+			case 'password':
+				labelName = 'Password';
+				fieldId = 'password';
+				fieldType = 'password';
+				break;
+
+			case 'userName':
+				labelName = 'User Name';
+				fieldId = 'user_name';
+				fieldType = 'text';
+				break;
+
+			case 'firstName':
+				labelName = 'First Name';
+				fieldId = 'first_name';
+				fieldType = 'text';
+				break;
+
+			case 'lastName':
+				labelName = 'Last Name';
+				fieldId = 'last_name';
+				fieldType = 'text';
+				break;
+
+			case 'phoneNumber':
+				labelName = 'Phone Number';
+				fieldId = 'phone_number';
+				fieldType = 'number';
+				break;
+		}
+
+		form += '<div id="' + fieldId + '" class="input"><label>' + labelName + '</label><input data-id="' + fieldId + '" type="' + fieldType + '" value="" placeholder="" /></div>';
+
+	}
+
+	return form;
+
+}
+
 function apiResult(){
 	return Math.floor(Math.random() * Math.floor(10));
 }
@@ -20,7 +72,7 @@ function clearField(e){
 }
 
 function goBack(e){
-	loadModal();
+	listeners.loadModal();
 }
 
 function continueToApp(e){
@@ -30,13 +82,13 @@ function continueToApp(e){
 function startAudioRecording(e){
 	$('.modal-action').html('<a href="#" onclick="stopRecording()" class="stopPhrase recording">Stop Recording<span>2/2</span></a>');
 
-	stopPhraseBtn();
+	listeners.stopPhraseBtn();
 }
 
 function startFirstAudioRecording(e){
 	$('.modal-action').html('<a href="#" onclick="stopRecording()" class="stopPhrase recording">Stop Recording<span>2/2</span></a>');
 
-	stopFirstPhraseBtn();
+	listeners.stopFirstPhraseBtn();
 }
 
 
@@ -50,7 +102,7 @@ function stopAudioRecording(e){
 		$('.modal-form').hide();
 		$('.modal-action').html('<a href="#" class="continue">Continue to Application</a>');
 
-		continueBtn();
+		listeners.continueBtn();
 
 	} else {
 
@@ -59,7 +111,7 @@ function stopAudioRecording(e){
 		$('.modal-form').html('<div class=\'phrase\'><h3>Toto, I\'ve a feeling we\'re not in Kansas anymore.</h3></div>');
 		$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase">Say Phrase</a>');
 
-		sayPhraseBtn();
+		listeners.sayPhraseBtn();
 
 	}
 }
@@ -72,7 +124,7 @@ function stopFirstAudioRecording(e){
 	$('.modal-form').html('');
 	$('.modal-action').html('<a href="#" class="goBack continue">Go to Login</a>');
 
-	goBackBtn();
+	listeners.goBackBtn();
 }
 
 function checkUserName() {
@@ -92,7 +144,7 @@ function checkUserName() {
 			$('.modal-form').html('<div class=\'phrase\'><h3>Toto, I\'ve a feeling we\'re not in Kansas anymore.</h3></div>');
 			$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase">Say Phrase<span>2/2</span></a>');
 
-			sayPhraseBtn();
+			listeners.sayPhraseBtn();
 
 		} else {
 
@@ -101,8 +153,8 @@ function checkUserName() {
 			$('.modal-form').html('<input type="text" value="" placeholder="--" />');
 			$('.modal-action').html('<a href="#" class="enroll full">Sign Up<span>1/2</span></a>');
 
-			nameFieldBtn();
-			enrollBtn();
+			listeners.nameFieldBtn();
+			listeners.enrollBtn();
 		}
 
 		$('#loginForm > .content').addClass('active');
@@ -120,13 +172,13 @@ function enrollUser() {
 	$('#loginForm > .content').removeClass('active');
 
 	$('.modal-body h1').html('Create Account.');
-	$('.modal-body p').html('To enroll, <strong>enter your email address</strong> below.');
-	$('.modal-form').html('<input type="text" value="" placeholder="--" />');
-	$('.modal-action').html('<a href="#" class="recordPhase">Sign Up<span>1/2</span></a><a href="#" class="goBack">Go Back</a>');
+	$('.modal-body p').html('To enroll, please <strong>fill out the form</strong> below.');
+	$('.modal-form').html(buildForm(JSON.stringify(['userName','password','firstName','lastName','emailAddress','phoneNumber'])));
+	$('.modal-action').html('<a href="#" class="recordPhase">Sign Up</a><a href="#" class="goBack">Go Back</a>');
 
-	recordPhraseBtn();
-	nameFieldBtn();
-	goBackBtn();
+	listeners.recordPhraseBtn();
+	listeners.nameFieldBtn();
+	listeners.goBackBtn();
 
 	$('#loginForm > .content').addClass('active');
 }
@@ -139,7 +191,7 @@ function enrollUserName() {
 	$('.modal-body h1').html('Speak Phrase.');
 	$('.modal-body p').html('Great. Now <strong>repeat the phrase</strong> below. Click <strong>say phrase</strong> when you\'re ready.');
 	$('.modal-form').html('<div class=\'phrase\'><h3>Toto, I\'ve a feeling we\'re not in Kansas anymore.</h3></div>');
-	$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase">Say Phrase<span>2/2</span></a>');
+	$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase">Say Phrase<span>1/3</span></a>');
 
 	sayFirstPhraseBtn();
 
@@ -151,14 +203,14 @@ function loadModal() {
 
 	$('.modal-body h1').html('Log In.');
 	$('.modal-body p').html('To access this site, please <strong>enter your user name</strong> to get started.');
-	$('.modal-form').html('<input type="text" value="" placeholder="--" />');
+	$('.modal-form').html(buildForm(JSON.stringify(['userName'])));
 	$('.modal-action').html('<a href="#" class="checkName">Next<span>1/2</span></a><a href="#" class="enrollUser">Sign Up</a>');
 
 	$('#overlay, #loginForm, #loginForm > .content').addClass('active');
 
-	checkNameBtn();
-	enrollUserBtn();
-	nameFieldBtn();
+	listeners.checkNameBtn();
+	listeners.enrollUserBtn();
+	listeners.nameFieldBtn();
 }
 
 (function($){
@@ -171,59 +223,90 @@ function loadModal() {
 
 })(jQuery);
 
-function checkNameBtn() {
-	let checkName = document.getElementsByClassName('checkName')[0];
-	checkName.addEventListener('click',checkUserName,false);
+let listeners = {
+	checkNameBtn: function() {
+		let checkName = document.getElementsByClassName('checkName')[0];
+		checkName.addEventListener('click',checkUserName,false);
+	},
+
+	enrollBtn: function() {
+		let enroll = document.getElementsByClassName('enroll')[0];
+		enroll.addEventListener('click',enrollUserName,false);
+	},
+
+	enrollUserBtn: function() {
+		let enroll = document.getElementsByClassName('enrollUser')[0];
+		enroll.addEventListener('click',enrollUser,false);
+	},
+
+	nameFieldBtn: function() {
+		let nameField = document.getElementsByTagName('input')[0];
+		nameField.addEventListener('click',clearField,false);
+	},
+
+	sayPhraseBtn: function() {
+		let say = document.getElementsByClassName('checkPhrase')[0];
+		say.addEventListener('click',startAudioRecording,false);
+	},
+
+	sayFirstPhraseBtn: function() {
+		let say = document.getElementsByClassName('checkPhrase')[0];
+		say.addEventListener('click',startFirstAudioRecording,false);
+	},
+
+	stopPhraseBtn: function() {
+		let stop = document.getElementsByClassName('stopPhrase')[0];
+		stop.addEventListener('click',stopAudioRecording,false);
+	},
+
+	stopFirstPhraseBtn: function() {
+		let stop = document.getElementsByClassName('stopPhrase')[0];
+		stop.addEventListener('click',stopFirstAudioRecording,false);
+	},
+
+	goBackBtn: function() {
+		let back = document.getElementsByClassName('goBack')[0];
+		back.addEventListener('click',goBack,false);
+	},
+
+	continueBtn: function() {
+		let cont = document.getElementsByClassName('continue')[0];
+		cont.addEventListener('click',continueToApp,false);
+	},
+
+	recordPhraseBtn: function() {
+		let recordPhase = document.getElementsByClassName('recordPhase')[0];
+		recordPhase.addEventListener('click',enrollUserName,false);
+	},
+
+	input: function(){
+		let allInputs = document.getElementsByTagName('input');
+
+		for (let a = 0; a < allInputs.length; a++) {
+			allInputs[a].addEventListener('focusin',inputs.onFocus,false);
+			allInputs[a].addEventListener('focusout',inputs.onFocusOut,false);
+		}
+	}
 }
 
-function enrollBtn() {
-	let enroll = document.getElementsByClassName('enroll')[0];
-	enroll.addEventListener('click',enrollUserName,false);
+let inputs = {
+	onFocus: function(e){
+		$(e.target).closest('div').addClass('selected');	
+	},
+
+	onFocusOut: function(e){
+		if ( e.target.value == '' ) $(e.target).closest('div').removeClass('selected');
+	}
 }
 
-function enrollUserBtn() {
-	let enroll = document.getElementsByClassName('enrollUser')[0];
-	enroll.addEventListener('click',enrollUser,false);
-}
+let modal = function(){
+	this.username = function(){},
+	this.password = function(){},
+	this.firstname = function(){},
+	this.lastname = function(){},
+	this.email = function(){},
+	this.phone = function(){},
 
-function nameFieldBtn() {
-	let nameField = document.getElementsByTagName('input')[0];
-	nameField.addEventListener('click',clearField,false);
+	this.formData = function(){}
 }
-
-function sayPhraseBtn() {
-	let say = document.getElementsByClassName('checkPhrase')[0];
-	say.addEventListener('click',startAudioRecording,false);
-}
-
-function sayFirstPhraseBtn() {
-	let say = document.getElementsByClassName('checkPhrase')[0];
-	say.addEventListener('click',startFirstAudioRecording,false);
-}
-
-function stopPhraseBtn() {
-	let stop = document.getElementsByClassName('stopPhrase')[0];
-	stop.addEventListener('click',stopAudioRecording,false);
-}
-
-function stopFirstPhraseBtn() {
-	let stop = document.getElementsByClassName('stopPhrase')[0];
-	stop.addEventListener('click',stopFirstAudioRecording,false);
-}
-
-function goBackBtn() {
-	let back = document.getElementsByClassName('goBack')[0];
-	back.addEventListener('click',goBack,false);
-}
-
-function continueBtn() {
-	let cont = document.getElementsByClassName('continue')[0];
-	cont.addEventListener('click',continueToApp,false);
-}
-
-function recordPhraseBtn() {
-	let recordPhase = document.getElementsByClassName('recordPhase')[0];
-	recordPhase.addEventListener('click',enrollUserName,false);
-}
-
 

@@ -272,6 +272,31 @@
             font: normal normal normal 36px/1 fontawesome;
         }
 
+    .modal-form .input {
+        transition: all ease 300ms;
+        position:relative;
+    }
+
+    .modal-form label {
+        transition:ease all 300ms;
+        font-weight:300;
+        color:#999;
+        position:absolute;
+        top:10px;
+        left:20px;
+        pointer-events:none;
+    }
+
+    .modal-form .input.selected {
+        margin-top:20px;
+    }
+
+    .modal-form .input.selected label {
+        font-size:0.75em;
+        color: #333;
+        top: -23px;
+        left: 0;
+    }
 
 .modal-action {
     border-top:solid 1px #ccc;
