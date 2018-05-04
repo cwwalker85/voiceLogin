@@ -274,7 +274,6 @@
 
 
 .modal-action {
-    border-top:solid 1px #ccc;
     display:flex;
     flex-direction: row;
     justify-content: stretch;

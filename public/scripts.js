@@ -28,13 +28,13 @@ function continueToApp(e){
 }
 
 function startAudioRecording(e){
-	$('.modal-action').html('<a href="#" onclick="stopRecording()" class="stopPhrase recording">Stop Recording<span>2/2</span></a>');
+	$('.modal-action').html('<a href="#" onclick="stopRecording()" class="stopPhrase recording"><strong>Stop Recording</strong><span>2/2</span></a>');
 
 	stopPhraseBtn();
 }
 
 function startFirstAudioRecording(e){
-	$('.modal-action').html('<a href="#" onclick="stopRecording()" class="stopPhrase recording">Stop Recording<span>2/2</span></a>');
+	$('.modal-action').html('<a href="#" onclick="stopRecording()" class="stopPhrase recording"><strong>Stop Recording</strong><span>2/2</span></a>');
 
 	stopFirstPhraseBtn();
 }
@@ -48,7 +48,7 @@ function stopAudioRecording(e){
 		$('.modal-body h1').html('Success.');
 		$('.modal-body p').html('Press <strong>continue</strong> to start using the application.');
 		$('.modal-form').hide();
-		$('.modal-action').html('<a href="#" class="continue">Continue to Application</a>');
+		$('.modal-action').html('<a href="#" class="continue"><strong>Continue to Application</strong></a>');
 
 		continueBtn();
 
@@ -57,7 +57,7 @@ function stopAudioRecording(e){
 		$('.modal-body h1').html('Oops.');
 		$('.modal-body p').html('<strong>That recording did not match our records.</strong> Please repeat the phrase below.');
 		$('.modal-form').html('<div class=\'phrase\'><h3>Toto, I\'ve a feeling we\'re not in Kansas anymore.</h3></div>');
-		$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase">Say Phrase</a>');
+		$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase"><strong>Say Phrase</strong></a>');
 
 		sayPhraseBtn();
 
@@ -70,7 +70,7 @@ function stopFirstAudioRecording(e){
 	$('.modal-body h1').html('Success.');
 	$('.modal-body p').html('Great. Please <strong>return to log in form</strong> to begin.');
 	$('.modal-form').html('');
-	$('.modal-action').html('<a href="#" class="goBack continue">Go to Login</a>');
+	$('.modal-action').html('<a href="#" class="goBack continue"><strong>Go to Login</strong></a>');
 
 	goBackBtn();
 }
@@ -90,7 +90,7 @@ function checkUserName() {
 			$('.modal-body h1').html('Log In.');
 			$('.modal-body p').html('Great. Now <strong>repeat the phrase</strong> below. Click <strong>say phrase</strong> when you\'re ready.');
 			$('.modal-form').html('<div class=\'phrase\'><h3>Toto, I\'ve a feeling we\'re not in Kansas anymore.</h3></div>');
-			$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase">Say Phrase<span>2/2</span></a>');
+			$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase"><strong>Say Phrase</strong><span>2/2</span></a>');
 
 			sayPhraseBtn();
 
@@ -99,7 +99,7 @@ function checkUserName() {
 			$('.modal-body h1').html('Oops.');
 			$('.modal-body p').html('<strong>That usename is not registered.</strong> To enroll, enter your email address below.');
 			$('.modal-form').html('<input type="text" value="" placeholder="--" />');
-			$('.modal-action').html('<a href="#" class="enroll full">Sign Up<span>1/2</span></a>');
+			$('.modal-action').html('<a href="#" class="enroll full"><strong>Sign Up</strong><span>1/2</span></a>');
 
 			nameFieldBtn();
 			enrollBtn();
@@ -122,7 +122,7 @@ function enrollUser() {
 	$('.modal-body h1').html('Create Account.');
 	$('.modal-body p').html('To enroll, <strong>enter your email address</strong> below.');
 	$('.modal-form').html('<input type="text" value="" placeholder="--" />');
-	$('.modal-action').html('<a href="#" class="recordPhase">Sign Up<span>1/2</span></a><a href="#" class="goBack">Go Back</a>');
+	$('.modal-action').html('<a href="#" class="recordPhase"><strong>Sign Up</strong><span>1/2</span></a><a href="#" class="goBack">Go Back</a>');
 
 	recordPhraseBtn();
 	nameFieldBtn();
@@ -139,7 +139,7 @@ function enrollUserName() {
 	$('.modal-body h1').html('Speak Phrase.');
 	$('.modal-body p').html('Great. Now <strong>repeat the phrase</strong> below. Click <strong>say phrase</strong> when you\'re ready.');
 	$('.modal-form').html('<div class=\'phrase\'><h3>Toto, I\'ve a feeling we\'re not in Kansas anymore.</h3></div>');
-	$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase">Say Phrase<span>2/2</span></a>');
+	$('.modal-action').html('<a href="#" onclick="startRecording()" class="checkPhrase"><strong>Say Phrase</strong><span>2/2</span></a>');
 
 	sayFirstPhraseBtn();
 
@@ -152,7 +152,7 @@ function loadModal() {
 	$('.modal-body h1').html('Log In.');
 	$('.modal-body p').html('To access this site, please <strong>enter your user name</strong> to get started.');
 	$('.modal-form').html('<input type="text" value="" placeholder="--" />');
-	$('.modal-action').html('<a href="#" class="checkName">Next<span>1/2</span></a><a href="#" class="enrollUser">Sign Up</a>');
+	$('.modal-action').html('<a href="#" class="checkName"><strong>Next</strong><span>1/2</span></a><a href="#" class="enrollUser">Sign Up</a>');
 
 	$('#overlay, #loginForm, #loginForm > .content').addClass('active');
 
