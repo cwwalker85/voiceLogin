@@ -1,3 +1,4 @@
+let callNumber = '';
 let theApp = {
     headline:'',
     bodyTxt:'',
@@ -132,7 +133,7 @@ let theApp = {
         },
         voiceCapture2: function(){
             theApp.headline = 'Say Phrase';
-            theApp.bodyTxt = 'Great. Now <span>repeat the phrase</span> below. Click <span>say phrase</span> when you\'re ready.';
+            theApp.bodyTxt = 'Awesome. Let\'s <span>repeat the phrase</span> two more times.';
             theApp.primaryBtnTxt = 'Start Recording 2/3';
             theApp.primaryBtnClass = 'stopRecording2';
             theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
@@ -144,7 +145,7 @@ let theApp = {
         },
         voiceCapture3: function(){
             theApp.headline = 'Say Phrase';
-            theApp.bodyTxt = 'Great. Now <span>repeat the phrase</span> below. Click <span>say phrase</span> when you\'re ready.';
+            theApp.bodyTxt = 'Last Time. Finally, please <span>repeat the phrase</span> one more time.';
             theApp.primaryBtnTxt = 'Start Recording 3/3';
             theApp.primaryBtnClass = 'stopRecording3';
             theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
@@ -155,60 +156,63 @@ let theApp = {
             theApp.init.listeners();
         },
         recording: function(){
-            theApp.primaryBtnTxt = 'Stop Recording';
+            theApp.primaryBtnTxt = 'Stop Recording 1/3';
             theApp.primaryBtnClass = 'recording';
             theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
         stopRecording1: function(){
-            theApp.primaryBtnTxt = 'Stop Recording 1/3';
+            theApp.primaryBtnTxt = 'Submit Recording';
             theApp.primaryBtnClass = 'submit1';
             theApp.primaryBtnExtra = '';
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
-        stopRecording2: function(){
+        recording2: function(){
             theApp.primaryBtnTxt = 'Stop Recording 2/3';
             theApp.primaryBtnClass = 'recording2';
             theApp.primaryBtnExtra = '';
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
-        stopRecording3: function(){
+        stopRecording2: function(){
+            theApp.primaryBtnTxt = 'Submit Recording';
+            theApp.primaryBtnClass = 'submit2';
+            theApp.primaryBtnExtra = '';
+            theApp.launch.updatePrimary();
+            theApp.init.listeners();
+        },
+
+        recording3: function(){
             theApp.primaryBtnTxt = 'Stop Recording 3/3';
             theApp.primaryBtnClass = 'recording3';
             theApp.primaryBtnExtra = '';
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
+        stopRecording3: function(){
+            theApp.primaryBtnTxt = 'Submit Recording';
+            theApp.primaryBtnClass = 'submit3';
+            theApp.primaryBtnExtra = '';
+            theApp.launch.updatePrimary();
+            theApp.init.listeners();
+        },
+        
+        /*saveEnroll1Data: function(response){
+            theApp.data.biometricData = response;
+            theApp.launch.enrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');
+        },*/
         saveEnroll1: function(){
             theApp.data.biometricData = $('#save').attr('href');
             
             var reader = new FileReader();
             reader.readAsDataURL(testBlob); 
             reader.onloadend = function() {
-                //theApp.data.biometricData = reader.result;      
-                theApp.launch.retrieveFile(theApp.data.username, reader.result, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');          
+                theApp.launch.enroll1(theApp.data.username, reader.result, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');          
             }
-
-            /*var reader = new FileReader();
-            reader.onload = function(result){
-                var fileData = '';
-                var byteArray = new Uint8Array(result.target.result);
-                for (var i=0;i < byteArray.byteLength;i++){
-                    fileData += String.fromCharCode(byteArray[i]);
-                }
-                theApp.data.biometricData = fileData;
-                theApp.launch.saveEnroll1Data(); 
-            }
-            reader.readAsArrayBuffer(testBlob);*/
         },
-        saveEnroll1Data: function(response){
-            theApp.data.biometricData = response;
-            theApp.launch.enrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');
-        },
-        retrieveFile: function(userId, fileData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated) {
+        enroll1: function(userId, fileData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated, callNumber) {
             fileData = fileData.replace('data:audio/wav;base64,','');
             var obj = {
                 "userId": userId,
@@ -231,14 +235,119 @@ let theApp = {
                 data: JSON.stringify(obj),
                 contentType: "application/json",
                 success: function (data) {
-                    theApp.launch.saveEnroll1Data(data);
+                    if ( data.Message == 'Enrollment Success') {
+                        callNumber = 'second';
+                        theApp.launch.voiceCapture2();
+                    }
                 },
                 error: function(xhr,message){
                     console.log(xhr);
                 }
             });
+
+            theApp.launch.voiceCapture2();
         },
-        enrollApi: function(userId, biometricData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated) {
+
+        saveEnroll2: function(){
+            theApp.data.biometricData = $('#save').attr('href');
+            
+            var reader = new FileReader();
+            reader.readAsDataURL(testBlob); 
+            reader.onloadend = function() {
+                theApp.launch.enroll2(theApp.data.username, reader.result, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'second');          
+            }
+        },
+        enroll2: function(userId, fileData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated, callNumber) {
+            fileData = fileData.replace('data:audio/wav;base64,','');
+            var obj = {
+                "UserId": userId,
+                "ExternalUserId": externalUserId,
+                "Password": password,
+                "FirstName": firstName,
+                "LastName": lastName,
+                "Email": email,
+                "PhoneNumber": phoneNumber,
+                "BiometricDataBase64": fileData,
+                "Created": created,
+                "LastUpdated": lastUpdated
+            };
+
+            $.ajax({
+                url: theApp.endpoint + '/api/Enroll',
+                type: 'PUT',
+                async: false,
+                data: JSON.stringify(obj),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    console.log(data);
+                    if (data.Message == 'Enrollment Success') {
+                        theApp.launch.voiceCapture3();
+                    }
+
+                    if (callNumber == 'third') {
+                        theApp.launch.success();
+                    }
+                },
+                error: function(xhr){
+
+                }
+            });
+
+            theApp.launch.voiceCapture3();
+
+            if (callNumber == 'third') {
+                theApp.launch.success();
+            }
+        },
+
+        saveEnroll3: function(){
+            theApp.data.biometricData = $('#save').attr('href');
+            
+            var reader = new FileReader();
+            reader.readAsDataURL(testBlob); 
+            reader.onloadend = function() {
+                theApp.launch.enroll2(theApp.data.username, reader.result, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'third');          
+            }
+        },
+        /*enroll3: function(userId, fileData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated, callNumber) {
+            fileData = fileData.replace('data:audio/wav;base64,','');
+            var obj = {
+                "UserId": userId,
+                "ExternalUserId": externalUserId,
+                "Password": password,
+                "FirstName": firstName,
+                "LastName": lastName,
+                "Email": email,
+                "PhoneNumber": phoneNumber,
+                "BiometricDataBase64": fileData,
+                "Created": created,
+                "LastUpdated": lastUpdated
+            };
+
+            $.ajax({
+                url: theApp.endpoint + '/api/Enroll',
+                type: 'PUT',
+                async: false,
+                data: JSON.stringify(obj),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    console.log(data);
+                    if (data.Message == 'Enrollment Success') {
+                        theApp.launch.voiceCapture3();
+                    }
+
+                    if (callNumber == 'third') {
+                        theApp.launch.success();
+                    }
+                },
+                error: function(xhr){
+
+                }
+            });
+
+            theApp.launch.voiceCapture3();
+        },*/
+        /*enrollApi: function(userId, biometricData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated) {
 
             var obj = {
                 "userId": userId,
@@ -264,7 +373,7 @@ let theApp = {
                     theApp.launch.voiceCapture2();
                 },
             });
-        },
+        },*/
         updateEnrollApi: function(userId, biometricData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated,callNumber) {
 
             var obj = {
@@ -275,25 +384,30 @@ let theApp = {
                 "LastName": lastName,
                 "Email": email,
                 "PhoneNumber": phoneNumber,
-                "BiometricData": biometricData,
+                "BiometricDataBase64": fileData,
                 "Created": created,
                 "LastUpdated": lastUpdated
             };
 
             $.ajax({
                 url: theApp.endpoint + '/api/Enroll',
-                type: 'POST',
+                type: 'PUT',
                 async: false,
                 data: JSON.stringify(obj),
                 contentType: "application/json;charset=utf-8",
                 success: function (data) {
                     console.log(data);
-                    if (callNumber == 'second') {
+                    //if (data.Message == 'Enrollment Success') {
                         theApp.launch.voiceCapture3();
-                    } else {
-                        theApp.launch.enrollSuccess();
+                    //}
+
+                    if (callNumber == 'third') {
+                        theApp.launch.success();
                     }
                 },
+                error: function(xhr){
+
+                }
             });
         },
         loginApi: function(userId, biometricData) {
@@ -405,16 +519,22 @@ let theApp = {
                 theApp.launch.saveEnroll1();
                 break;
 
+            case 'stopRecording2':
+                theApp.launch.stopRecording2();
+                break;
+
             case 'submit2':
-                theApp.data.biometricData = $('#save').attr('href');
-                theApp.launch.updateEnrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'second');
+                theApp.launch.saveEnroll2();
+                break;
+
+            case 'stopRecording3':
+                theApp.launch.stopRecording3();
                 break;
 
             case 'submit3':
-                theApp.data.biometricData = $('#save').attr('href');
-                theApp.launch.updateEnrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'third');
-                
+                theApp.launch.saveEnroll3();
                 break;
+
             case 'success': 
                 theApp.launch.done();
                 break;
