@@ -242,10 +242,14 @@ let theApp = {
                 async: false,
                 data: JSON.stringify(obj),
                 contentType: "application/json",
+                beforeSend: function(){
+                    $('.modal-action').find('a').html('<i style="font-size: 16px;" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>');
+                },
                 success: function (data) {
                     console.log(data);
                     if ( data.Message.indexOf('Success') > -1 ) {
-                        theApp.launch.success();
+                        let name = data.Message.split('] ')[1];
+                        theApp.launch.success(name);
                     } else {
                         theApp.launch.login();
                     }
@@ -289,6 +293,9 @@ let theApp = {
                 async: false,
                 data: JSON.stringify(obj),
                 contentType: "application/json",
+                beforeSend: function(){
+                    $('.modal-action').find('a').html('<i style="font-size: 16px;" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>');
+                },
                 success: function (data) {
                     if ( data.Message == 'Enrollment Success') {
                         callNumber = 'second';
@@ -333,6 +340,9 @@ let theApp = {
                 async: false,
                 data: JSON.stringify(obj),
                 contentType: "application/json;charset=utf-8",
+                beforeSend: function(){
+                    $('.modal-action').find('a').html('<i style="font-size: 16px;" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>');
+                },
                 success: function (data) {
                     console.log(data);
                     if (data.Message == 'Enrollment Success') {
@@ -483,8 +493,13 @@ let theApp = {
             });
 
         }, 
-        success: function(){
-            theApp.headline = 'Success';
+        success: function(name){
+            if (name != undefined) {
+                theApp.headline = name;
+            } else {
+                theApp.headline = 'Success';
+            }
+            //theApp.headline = 'Success';
             theApp.bodyTxt = 'Press <span>continue</span> to start using the application.';
             theApp.primaryBtnTxt = 'Continue to Application';
             theApp.primaryBtnClass = 'success';

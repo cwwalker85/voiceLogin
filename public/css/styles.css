@@ -103,7 +103,7 @@ body {
     transition-delay:100ms;
     transition-duration:600ms;
     left: calc(50% - 225px);
-    top:120px;
+    top:60px;
     opacity:0;
     box-sizing:border-box;
 }
@@ -236,6 +236,7 @@ body {
     line-height:1;
     margin:0 0 10px;
     color: #004165;
+    text-transform:capitalize;
 }
 
 .modal-body p {

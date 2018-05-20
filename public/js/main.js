@@ -66,6 +66,7 @@ function toggleRecording( e ) {
         e.classList.add("recording");
         audioRecorder.clear();
         audioRecorder.record();
+        $('.modal-action').find('a').text('Stop Recording');
     }
 }
 
