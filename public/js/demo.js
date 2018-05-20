@@ -164,45 +164,84 @@ let theApp = {
         stopRecording1: function(){
             theApp.primaryBtnTxt = 'Stop Recording 1/3';
             theApp.primaryBtnClass = 'submit1';
-            theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
+            theApp.primaryBtnExtra = '';
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
         stopRecording2: function(){
             theApp.primaryBtnTxt = 'Stop Recording 2/3';
             theApp.primaryBtnClass = 'recording2';
-            theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
+            theApp.primaryBtnExtra = '';
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
         stopRecording3: function(){
             theApp.primaryBtnTxt = 'Stop Recording 3/3';
             theApp.primaryBtnClass = 'recording3';
-            theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
+            theApp.primaryBtnExtra = '';
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
         saveEnroll1: function(){
             theApp.data.biometricData = $('#save').attr('href');
-
-            var reader = new FileReader();
-            reader.addEventListener('loadend',function(){
-                theApp.launch.saveEnroll1Data(reader.result)
-            }); 
-            reader.readAsArrayBuffer(testBlob);
             
-            /*theApp.data.biometricData = reader.result;
+            var reader = new FileReader();
+            reader.readAsDataURL(testBlob); 
+            reader.onloadend = function() {
+                //theApp.data.biometricData = reader.result;      
+                theApp.launch.retrieveFile(theApp.data.username, reader.result, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');          
+            }
 
-            theApp.launch.enrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');*/
+            /*var reader = new FileReader();
+            reader.onload = function(result){
+                var fileData = '';
+                var byteArray = new Uint8Array(result.target.result);
+                for (var i=0;i < byteArray.byteLength;i++){
+                    fileData += String.fromCharCode(byteArray[i]);
+                }
+                theApp.data.biometricData = fileData;
+                theApp.launch.saveEnroll1Data(); 
+            }
+            reader.readAsArrayBuffer(testBlob);*/
         },
-        saveEnroll1Data: function(results){
-            theApp.data.biometricData = new Int8Array(results);
+        saveEnroll1Data: function(response){
+            theApp.data.biometricData = response;
             theApp.launch.enrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');
+        },
+        retrieveFile: function(userId, fileData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated) {
+            fileData = fileData.replace('data:audio/wav;base64,','');
+            var obj = {
+                "userId": userId,
+                "ExternalUserId": externalUserId,
+                "Password": password,
+                "FirstName": firstName,
+                "LastName": lastName,
+                "Email": email,
+                "PhoneNumber": phoneNumber,
+                "BiometricDataBase64": fileData,
+                "Created": created,
+                "LastUpdated": lastUpdated
+            };
+
+            $.ajax({
+                url: theApp.endpoint + '/api/Enroll',
+                type: 'POST',
+                crossDomain: true,
+                async: false,
+                data: JSON.stringify(obj),
+                contentType: "application/json",
+                success: function (data) {
+                    theApp.launch.saveEnroll1Data(data);
+                },
+                error: function(xhr,message){
+                    console.log(xhr);
+                }
+            });
         },
         enrollApi: function(userId, biometricData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated) {
 
             var obj = {
-                "UserId": userId,
+                "userId": userId,
                 "ExternalUserId": externalUserId,
                 "Password": password,
                 "FirstName": firstName,
@@ -218,6 +257,7 @@ let theApp = {
                 url: theApp.endpoint + '/api/Enroll',
                 type: 'POST',
                 async: false,
+                data: JSON.stringify(obj),
                 contentType: "application/json;charset=utf-8",
                 success: function (data) {
                     console.log(data);
@@ -499,4 +539,21 @@ function updateEnroll(userId, externalUserId, password, firstName, lastName, ema
         console.log(error);
         return null;
     }
+}
+
+function arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+}
+
+function blobToFile(theBlob, fileName){
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    theBlob.lastModifiedDate = new Date();
+    theBlob.name = fileName;
+    return theBlob;
 }
