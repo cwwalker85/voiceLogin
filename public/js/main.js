@@ -184,4 +184,12 @@ function initAudio() {
         });
 }
 
-window.addEventListener('load', initAudio );
+$(document).on('click', '.login', function (e) {
+    e.preventDefault();
+    initAudio();
+});
+
+$(document).on('click', '.enroll', function (e) {
+    e.preventDefault();
+    initAudio();
+});

@@ -9,7 +9,7 @@ let theApp = {
     secondaryBtnClass: '',
     fields: [],
 
-    endpoint: "http://ec2-18-232-141-12.compute-1.amazonaws.com/hackitapi",
+    endpoint: "https://www.firstdatavoicelock.com/hackitapi",
 
     init: {
         listeners: function() {
@@ -111,7 +111,7 @@ let theApp = {
             theApp.headline = 'Say Phrase';
             theApp.bodyTxt = 'Great. Now <span>repeat the phrase</span> below. Click <span>say phrase</span> when you\'re ready.';
             theApp.primaryBtnTxt = 'Start Recording';
-            theApp.primaryBtnClass = 'continue';
+            theApp.primaryBtnClass = 'startRecording';
             theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
             theApp.secondaryBtnTxt = 'Enroll Now';
             theApp.secondaryBtnClass = 'enroll';
@@ -162,6 +162,13 @@ let theApp = {
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
+        stopRecording: function(){
+            theApp.primaryBtnTxt = 'Submit Recording';
+            theApp.primaryBtnClass = 'submit';
+            theApp.primaryBtnExtra = '';
+            theApp.launch.updatePrimary();
+            theApp.init.listeners();
+        },
         stopRecording1: function(){
             theApp.primaryBtnTxt = 'Submit Recording';
             theApp.primaryBtnClass = 'submit1';
@@ -203,6 +210,54 @@ let theApp = {
             theApp.data.biometricData = response;
             theApp.launch.enrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');
         },*/
+
+        saveEnroll0: function(){
+            theApp.data.biometricData = $('#save').attr('href');
+            
+            var reader = new FileReader();
+            reader.readAsDataURL(testBlob); 
+            reader.onloadend = function() {
+                theApp.launch.enroll0(theApp.data.username, reader.result, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');          
+            }
+        },
+        enroll0: function(userId, fileData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated, callNumber) {
+            fileData = fileData.replace('data:audio/wav;base64,','');
+            var obj = {
+                "userId": userId,
+                "ExternalUserId": externalUserId,
+                "Password": password,
+                "FirstName": firstName,
+                "LastName": lastName,
+                "Email": email,
+                "PhoneNumber": phoneNumber,
+                "BiometricDataBase64": fileData,
+                "Created": created,
+                "LastUpdated": lastUpdated
+            };
+
+            $.ajax({
+                url: theApp.endpoint + '/api/Authenticate',
+                type: 'POST',
+                crossDomain: true,
+                async: false,
+                data: JSON.stringify(obj),
+                contentType: "application/json",
+                success: function (data) {
+                    console.log(data);
+                    if ( data.Message.indexOf('Success') > -1 ) {
+                        theApp.launch.success();
+                    } else {
+                        theApp.launch.login();
+                    }
+                },
+                error: function(xhr,message){
+                    console.log(xhr);
+                }
+            });
+
+            //theApp.launch.success();
+        },
+
         saveEnroll1: function(){
             theApp.data.biometricData = $('#save').attr('href');
             
@@ -296,7 +351,7 @@ let theApp = {
             theApp.launch.voiceCapture3();
 
             if (callNumber == 'third') {
-                theApp.launch.success();
+                theApp.launch.login();
             }
         },
 
@@ -402,7 +457,7 @@ let theApp = {
                     //}
 
                     if (callNumber == 'third') {
-                        theApp.launch.success();
+                        theApp.launch.login();
                     }
                 },
                 error: function(xhr){
@@ -465,12 +520,17 @@ let theApp = {
 
         switch (btnType) {
             case 'login':
-                theApp.data.username = $('#User Name').val();
+                theApp.data.username = $('#UserName').val();
                 theApp.launch.voiceCapture();
                 break;
             
             case 'start': {
                 theApp.launch.recording();
+                break;
+            }
+
+            case 'startRecording': {
+                theApp.launch.stopRecording();
                 break;
             }
 
@@ -513,6 +573,10 @@ let theApp = {
 
             case 'stopRecording1':
                 theApp.launch.recording1();
+                break;
+            
+            case 'submit':
+                theApp.launch.saveEnroll0();
                 break;
 
             case 'submit1':
