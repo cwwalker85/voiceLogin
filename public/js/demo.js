@@ -47,7 +47,8 @@ let theApp = {
                 $('.modal-form').append(theApp.fields);
             } else {
                 for (let i = 0; i < formFields.length; i++){
-                    $('.modal-form').append('<input type="' + formFields[i].fieldType + '" value="" data-id="' + formFields[i].label + '" placeholder="' + formFields[i].label + '">');
+                    let fieldId = formFields[i].label.replace(' ','');
+                    $('.modal-form').append('<input type="' + formFields[i].fieldType + '" value="" id="' + fieldId + '" placeholder="' + formFields[i].label + '">');
                 }
             }
         },
@@ -121,7 +122,7 @@ let theApp = {
             theApp.headline = 'Say Phrase';
             theApp.bodyTxt = 'Great. Now <span>repeat the phrase</span> below. Click <span>say phrase</span> when you\'re ready.';
             theApp.primaryBtnTxt = 'Start Recording';
-            theApp.primaryBtnClass = 'continue1';
+            theApp.primaryBtnClass = 'startRecording1';
             theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
             theApp.secondaryBtnTxt = 'Enroll Now';
             theApp.secondaryBtnClass = 'enroll';
@@ -133,7 +134,7 @@ let theApp = {
             theApp.headline = 'Say Phrase';
             theApp.bodyTxt = 'Great. Now <span>repeat the phrase</span> below. Click <span>say phrase</span> when you\'re ready.';
             theApp.primaryBtnTxt = 'Start Recording 2/3';
-            theApp.primaryBtnClass = 'continue2';
+            theApp.primaryBtnClass = 'stopRecording2';
             theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
             theApp.secondaryBtnTxt = 'Enroll Now';
             theApp.secondaryBtnClass = 'enroll';
@@ -145,7 +146,7 @@ let theApp = {
             theApp.headline = 'Say Phrase';
             theApp.bodyTxt = 'Great. Now <span>repeat the phrase</span> below. Click <span>say phrase</span> when you\'re ready.';
             theApp.primaryBtnTxt = 'Start Recording 3/3';
-            theApp.primaryBtnClass = 'continue3';
+            theApp.primaryBtnClass = 'stopRecording3';
             theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
             theApp.secondaryBtnTxt = 'Enroll Now';
             theApp.secondaryBtnClass = 'enroll';
@@ -160,19 +161,43 @@ let theApp = {
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
-        recording2: function(){
-            theApp.primaryBtnTxt = 'Stop Recording 2/3';
-            theApp.primaryBtnClass = 'recording';
+        stopRecording1: function(){
+            theApp.primaryBtnTxt = 'Stop Recording 1/3';
+            theApp.primaryBtnClass = 'submit1';
             theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
             theApp.launch.updatePrimary();
             theApp.init.listeners();
         },
-        recording3: function(){
-            theApp.primaryBtnTxt = 'Stop Recording 3/3';
-            theApp.primaryBtnClass = 'recording';
+        stopRecording2: function(){
+            theApp.primaryBtnTxt = 'Stop Recording 2/3';
+            theApp.primaryBtnClass = 'recording2';
             theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
             theApp.launch.updatePrimary();
             theApp.init.listeners();
+        },
+        stopRecording3: function(){
+            theApp.primaryBtnTxt = 'Stop Recording 3/3';
+            theApp.primaryBtnClass = 'recording3';
+            theApp.primaryBtnExtra = ' onclick="toggleRecording(this);"';
+            theApp.launch.updatePrimary();
+            theApp.init.listeners();
+        },
+        saveEnroll1: function(){
+            theApp.data.biometricData = $('#save').attr('href');
+
+            var reader = new FileReader();
+            reader.addEventListener('loadend',function(){
+                theApp.launch.saveEnroll1Data(reader.result)
+            }); 
+            reader.readAsArrayBuffer(testBlob);
+            
+            /*theApp.data.biometricData = reader.result;
+
+            theApp.launch.enrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');*/
+        },
+        saveEnroll1Data: function(results){
+            theApp.data.biometricData = new Int8Array(results);
+            theApp.launch.enrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');
         },
         enrollApi: function(userId, biometricData, externalUserId, password, firstName, lastName, email, phoneNumber, created, lastUpdated) {
 
@@ -193,10 +218,6 @@ let theApp = {
                 url: theApp.endpoint + '/api/Enroll',
                 type: 'POST',
                 async: false,
-                headers: {
-                    authorization: localStorage.getItem(TOKEN_ID)
-                },
-                data: JSON.stringify(obj),
                 contentType: "application/json;charset=utf-8",
                 success: function (data) {
                     console.log(data);
@@ -223,9 +244,6 @@ let theApp = {
                 url: theApp.endpoint + '/api/Enroll',
                 type: 'POST',
                 async: false,
-                headers: {
-                    authorization: localStorage.getItem(TOKEN_ID)
-                },
                 data: JSON.stringify(obj),
                 contentType: "application/json;charset=utf-8",
                 success: function (data) {
@@ -277,10 +295,10 @@ let theApp = {
     data: {
         username: '',
         password: '',
-        firstname: '',
-        lastname: '',
+        firstName: '',
+        lastName: '',
         email: '',
-        phone: '',
+        phoneNumber: '',
         biometricData: '',
         created: '',
         lastUpdated: '',
@@ -293,48 +311,68 @@ let theApp = {
 
         switch (btnType) {
             case 'login':
-                // 1- check if email exists to proceed to the next step. if success, go to step two and ask for them to valid their voice phrase
-                theApp.data.username = $('input[data-id="User Name"]').val();
+                theApp.data.username = $('#User Name').val();
                 theApp.launch.voiceCapture();
                 break;
             
-            case 'continue': {
-                // 2- if voice phrase validates, take email/username and voice data and check against voiceit.
+            case 'start': {
                 theApp.launch.recording();
                 break;
             }
+
+            case 'startRecording1': {
+                theApp.launch.stopRecording1();
+                break;
+            }
+
+            case 'start2': {
+                theApp.launch.recording();
+                break;
+            }
+
+            case 'start3': {
+                theApp.launch.recording();
+                break;
+            }
+
             case 'recording':
-                // 3- stops recording and logs in.
                 var reader, thisFile;
-                
                 reader = new FileReader();
                 thisFile = $('#save').attr('href');
                 //theApp.data.biometricData = reader.readAsArrayBuffer(thisFile);
                 theApp.data.biometricData = thisFile;
                 theApp.launch.loginApi(theApp.data.username, theApp.data.biometricData);
-                theApp.launch.success();
                 break;
 
             case 'enroll':
                 theApp.launch.enroll();
                 break;
+
             case 'signup':
-                theApp.data.username = $('input[data-id="User Name"]').val();
-                theApp.data.firstname = $('input[data-id="First Name"]').val();
-                theApp.data.lastname = $('input[data-id="Last Name"]').val();
-                theApp.data.phone = $('input[data-id="Phone Number"]').val();
-                theApp.data.email = $('input[data-id="Email Address"]').val();
+                theApp.data.username = $('#UserName').val();
+                theApp.data.firstName = $('#FirstName').val();
+                theApp.data.lastName = $('#LastName').val();
+                theApp.data.phoneNumber = $('#PhoneNumber').val();
+                theApp.data.email = $('#EmailAddress').val();
                 theApp.launch.voiceCapture1();
                 break;
-            case 'enrollVoice1':
-                theApp.launch.enrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'first');
-                
+
+            case 'stopRecording1':
+                theApp.launch.recording1();
                 break;
-            case 'enrollVoice2':
+
+            case 'submit1':
+                theApp.launch.saveEnroll1();
+                break;
+
+            case 'submit2':
+                theApp.data.biometricData = $('#save').attr('href');
                 theApp.launch.updateEnrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'second');
                 break;
-            case 'enrollVoice3':
-                theApp.launch.updateEnrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber, theApp.data.created,theApp.data.lastUpdated,'third');
+
+            case 'submit3':
+                theApp.data.biometricData = $('#save').attr('href');
+                theApp.launch.updateEnrollApi(theApp.data.username, theApp.data.biometricData, theApp.data.externalUserId, theApp.data.password, theApp.data.firstName,theApp.data.lastName, theApp.data.email, theApp.data.phoneNumber,theApp.data.created,theApp.data.lastUpdated,'third');
                 
                 break;
             case 'success': 
